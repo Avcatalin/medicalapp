@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Harta Interactivă a României</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Harta Interactivă a României</h1>
+    <div class="harta">
+        <svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+            <!-- Coordonate pentru fiecare județ -->
+            <path class="judet" id="arad" d="M50,100 L100,50 L150,100 L100,150 Z" />
+            <path class="judet" id="bihor" d="M200,100 L250,50 L300,100 L250,150 Z" />
+            <path class="judet" id="constanta" d="M350,100 L400,50 L450,100 L400,150 Z" />
+            <!-- Continuați adăugarea de coordonate pentru celelalte județe -->
+            <path class="judet" id="alba" d="M500,100 L550,50 L600,100 L550,150 Z" />
+            <path class="judet" id="brasov" d="M650,100 L700,50 L750,100 L700,150 Z" />
+            <!-- Exemplu de adăugare a altor județe -->
+        </svg>
+    </div>
+    <div id="popup" class="popup">
+        <div class="popup-content">
+            <span class="close">&times;</span>
+            <div id="clinici-container">
+                <!-- Locurile unde există clinici medicale vor fi afișate aici -->
+            </div>
+            <form id="form-clinica" style="display: none;">
+                <h2>Formular de Înscriere</h2>
+                <label for="nume">Nume:</label>
+                <input type="text" id="nume" name="nume" required><br><br>
+                <label for="prenume">Prenume:</label>
+                <input type="text" id="prenume" name="prenume" required><br><br>
+                <label for="telefon">Număr de Telefon:</label>
+                <input type="tel" id="telefon" name="telefon" required><br><br>
+                <label for="cnp">CNP:</label>
+                <input type="text" id="cnp" name="cnp" required><br><br>
+                <label for="statut">Statut:</label>
+                <select id="statut" name="statut" required>
+                    <option value="casatorit">Căsătorit</option>
+                    <option value="necasatorit">Necăsătorit</option>
+                </select><br><br>
+                <label for="calendar">Data:</label>
+                <input type="date" id="calendar" name="calendar" required><br><br>
+                <label for="varsta">Vârstă:</label>
+                <input type="number" id="varsta" name="varsta" required><br><br>
+                <label for="simptome">Simptome:</label>
+                <textarea id="simptome" name="simptome" required></textarea><br><br>
+                <input type="submit" value="Trimite" id="submit">
+            </form>
+        </div>
+    </div>
+    <script src="scripts.js"></script>
+</body>
+</html>

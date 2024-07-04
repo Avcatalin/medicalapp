@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista Pacienților</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Lista Pacienților</h1>
+
+    <div class="container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Nume</th>
+                    <th>Prenume</th>
+                    <th>Telefon</th>
+                    <th>CNP</th>
+                    <th>Statut</th>
+                    <th>Data programării</th>
+                    <th>Vârstă</th>
+                    <th>Simptome</th>
+                    <th>Acțiuni</th>
+                </tr>
+            </thead>
+            <tbody id="lista-pacienti">
+                <!-- Aici vor fi afișați pacienții -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+    const judete = document.querySelectorAll('.judet');
+    const popup = document.querySelector('.popup');
+    const close = document.querySelector('.close');
+    const cliniciContainer = document.getElementById('clinici-container');
+    const formClinica = document.getElementById('form-clinica');
+    const submitBtn = document.getElementById('submit');
+
+    // Datele despre clinici pentru fiecare județ
+    const cliniciData = {
+        arad: ['Clinica Arad 1', 'Clinica Arad 2', 'Dispensar Arad'],
+        bihor: ['Spital Bihor', 'Clinica Bihor', 'Dispensar Bihor'],
+        constanta: ['Clinica Constanta', 'Dispensar Constanta'],
+        alba: ['Spital Alba', 'Clinica Alba', 'Dispensar Alba'],
+        brasov: ['Spital Brasov', 'Clinica Brasov', 'Dispensar Brasov']
+        // Adăugați alte județe și clinici aici
+    };
+
+    // Funcție pentru a adăuga un pacient în localStorage
+    function adaugaPacientLocalStorage(nume, prenume, telefon, cnp, statut, calendar, varsta, simptome) {
+        let pacienti = getPacientiLocalStorage();
+
+        // Creăm un obiect pentru noul pacient
+        const pacient = {
+            nume: nume,
+            prenume: prenume,
+            telefon: telefon,
+            cnp: cnp,
+            statut: statut,
+            calendar: calendar,
+            varsta: varsta,
+            simptome: simptome
+        };
+
+        // Adăugăm noul pacient în array-ul existent
+        pacienti.push(pacient);
+
+        // Salvăm array-ul actualizat în localStorage
+        localStorage.setItem('pacienti', JSON.stringify(pacienti));
+    }
+
+    // Funcție pentru a obține pacienții din localStorage
+    function getPacientiLocalStorage() {
+        let pacienti;
+        const pacientiLocalStorage = localStorage.getItem('pacienti');
+
+        // Obținem datele din localStorage sau creăm un array gol
+        if (pacientiLocalStorage === null) {
+            pacienti = [];
+        } else {
+            pacienti = JSON.parse(pacientiLocalStorage);
+        }
+        return pacienti;
+    }
+
+    // Funcție pentru a afișa pacienții într-un tabel pe pagina doctor.html
+    function afiseazaPacienti() {
+        let pacienti = getPacientiLocalStorage();
+        let listaPacienti = document.getElementById('lista-pacienti');
+
+        // Ștergem orice conținut existent din tabel
+        listaPacienti.innerHTML = '';
+
+        // Parcurgem lista de pacienți și creăm rânduri pentru fiecare pacient
+        pacienti.forEach(function(pacient, index) {
+            let row = `
+                <tr>
+                    <td>${pacient.nume}</td>
+                    <td>${pacient.prenume}</td>
+                    <td>${pacient.telefon}</td>
+                    <td>${pacient.cnp}</td>
+                    <td>${pacient.statut}</td>
+                    <td>${pacient.calendar}</td>
+                    <td>${pacient.varsta}</td>
+                    <td>${pacient.simptome}</td>
+                    <td>
+                        <button onclick="editarePacient(${index})">Editează</button>
+                        <button onclick="stergePacient(${index})">Șterge</button>
+                        <button onclick="reprogramarePacient(${index})">Reprogramează</button>
+                    </td>
+                </tr>
+            `;
+            listaPacienti.innerHTML += row;
+        });
+    }
+
+    // Funcție pentru ștergerea unui pacient din localStorage
+    function stergePacient(index) {
+        let pacienti = getPacientiLocalStorage();
+
+        // Ștergem pacientul din array-ul local
+        pacienti.splice(index, 1);
+
+        // Salvăm array-ul actualizat în localStorage
+        localStorage.setItem('pacienti', JSON.stringify(pacienti));
+
+        // Afișăm din nou lista actualizată pe doctor.html
+        afiseazaPacienti();
+    }
+
+    // Funcție pentru a edita un pacient (în implementare)
+    function editarePacient(index) {
+        // Implementează logica pentru editarea pacientului (în viitor)
+        console.log('Editare pacient', index);
+    }
+
+    // Funcție pentru a reprograma un pacient (în implementare)
+    function reprogramarePacient(index) {
+        // Implementează logica pentru reprogramearea pacientului (în viitor)
+        console.log('Reprogramează pacient', index);
+    }
+
+    judete.forEach(judet => {
+        judet.addEventListener('click', function() {
+            const id = judet.id;
+            const clinici = cliniciData[id];
+            cliniciContainer.innerHTML = '';
+            if (clinici) {
+                clinici.forEach(clinica => {
+                    const button = document.createElement('button');
+                    button.textContent = clinica;
+                    button.addEventListener('click', function() {
+                        formClinica.style.display = 'block';
+                        // Setăm informația clinicii în formular
+                        document.getElementById('clinica-selectata').textContent = clinica;
+                    });
+                    cliniciContainer.appendChild(button);
+                });
+            }
+            popup.style.display = 'block';
+            formClinica.style.display = 'none';
+        });
+    });
+
+    if (close) {
+        close.addEventListener('click', function() {
+            popup.style.display = 'none';
+        });
+    }
+
+    if (submitBtn) {
+        submitBtn.addEventListener('click', function(event) {
+            event.preventDefault(); // Prevenim trimiterea formularului
+
+            // Obținem valorile din formular
+            const nume = document.getElementById('nume').value;
+            const prenume = document.getElementById('prenume').value;
+            const telefon = document.getElementById('telefon').value;
+            const cnp = document.getElementById('cnp').value;
+            const statut = document.getElementById('statut').value;
+            const calendar = document.getElementById('calendar').value;
+            const varsta = document.getElementById('varsta').value;
+            const simptome = document.getElementById('simptome').value;
+
+            // Salvăm pacientul utilizând localStorage
+            adaugaPacientLocalStorage(nume, prenume, telefon, cnp, statut, calendar, varsta, simptome);
+
+            // Resetăm formularul
+            formClinica.reset();
+
+            // Afișăm mesaj de succes sau alte acțiuni dorite
+            alert('Formularul a fost trimis cu succes!');
+
+            // Redirecționăm utilizatorul către pagina doctor.html
+            window.location.href = 'doctor.html';
+        });
+    }
+});
+
+    </script>
+    <script>
+        // Afisăm pacienții la încărcarea paginii doctor.html
+        window.onload = function() {
+            afiseazaPacienti();
+        };
+    </script>
+</body>
+</html>
